@@ -27,39 +27,49 @@ public class OperationsPanel extends JPanel {
     }
 
     private JPanel buildHabitatPanel() {
-        JPanel p = new JPanel(new BorderLayout(8, 8));
-        p.setBackground(Theme.CARD);
-        p.setBorder(new EmptyBorder(12, 12, 12, 12));
-        JLabel t = new JLabel("Habitats"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 20));
+        JPanel p = Theme.makeCardLayoutPanel(new BorderLayout(8, 8));
+        JLabel t = new JLabel("🏞️ Habitats"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 22));
         p.add(t, BorderLayout.NORTH);
-        p.add(new JScrollPane(new JTable(habitatModel)), BorderLayout.CENTER);
-        JButton add = new JButton("Add Habitat");
+        JTable table = new JTable(habitatModel);
+        Theme.styleTable(table);
+        p.add(new JScrollPane(table), BorderLayout.CENTER);
+        JButton add = new JButton("+ Add Habitat");
+        Theme.styleButton(add);
         add.addActionListener(e -> {
-            String id = JOptionPane.showInputDialog(this, "Habitat ID:");
-            String name = JOptionPane.showInputDialog(this, "Name:");
-            String climate = JOptionPane.showInputDialog(this, "Climate:");
-            int cap = Integer.parseInt(JOptionPane.showInputDialog(this, "Capacity:"));
-            service.addHabitat(new Habitat(id, name, climate, cap));
-            refresh();
+            try {
+                String id = JOptionPane.showInputDialog(this, "Habitat ID:");
+                String name = JOptionPane.showInputDialog(this, "Name:");
+                String climate = JOptionPane.showInputDialog(this, "Climate:");
+                int cap = Integer.parseInt(JOptionPane.showInputDialog(this, "Capacity:"));
+                service.addHabitat(new Habitat(id, name, climate, cap));
+                refresh();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Could not add habitat: " + ex.getMessage());
+            }
         });
         p.add(add, BorderLayout.SOUTH);
         return p;
     }
 
     private JPanel buildKeeperPanel() {
-        JPanel p = new JPanel(new BorderLayout(8, 8));
-        p.setBackground(Theme.CARD);
-        p.setBorder(new EmptyBorder(12, 12, 12, 12));
-        JLabel t = new JLabel("Zookeepers"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 20));
+        JPanel p = Theme.makeCardLayoutPanel(new BorderLayout(8, 8));
+        JLabel t = new JLabel("👩‍🌾 Zookeepers"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 22));
         p.add(t, BorderLayout.NORTH);
-        p.add(new JScrollPane(new JTable(keeperModel)), BorderLayout.CENTER);
-        JButton add = new JButton("Add Keeper");
+        JTable table = new JTable(keeperModel);
+        Theme.styleTable(table);
+        p.add(new JScrollPane(table), BorderLayout.CENTER);
+        JButton add = new JButton("+ Add Keeper");
+        Theme.styleButton(add);
         add.addActionListener(e -> {
-            String id = JOptionPane.showInputDialog(this, "Keeper ID:");
-            String name = JOptionPane.showInputDialog(this, "Name:");
-            String shift = JOptionPane.showInputDialog(this, "Shift:");
-            service.addKeeper(new Zookeeper(id, name, shift));
-            refresh();
+            try {
+                String id = JOptionPane.showInputDialog(this, "Keeper ID:");
+                String name = JOptionPane.showInputDialog(this, "Name:");
+                String shift = JOptionPane.showInputDialog(this, "Shift:");
+                service.addKeeper(new Zookeeper(id, name, shift));
+                refresh();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Could not add keeper: " + ex.getMessage());
+            }
         });
         p.add(add, BorderLayout.SOUTH);
         return p;

@@ -21,8 +21,8 @@ public class MainFrame extends JFrame {
     private final CarePanel carePanel;
 
     public MainFrame(ZooService service) {
-        setTitle("ZooVerse - Virtual Zoo Management");
-        setSize(1280, 760);
+        setTitle("ZooVerse - Wild Operations Console");
+        setSize(1320, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -35,43 +35,58 @@ public class MainFrame extends JFrame {
         content.add(animalsPanel, "Animals");
         content.add(operationsPanel, "Operations");
         content.add(carePanel, "Care");
+        content.setBackground(Theme.BG);
 
-        JPanel sidebar = new JPanel(new GridLayout(8, 1, 8, 8));
-        sidebar.setBackground(new Color(22, 27, 37));
-        sidebar.setBorder(new EmptyBorder(20, 15, 20, 15));
+        JPanel sidebar = new JPanel(new BorderLayout(10, 10));
+        sidebar.setPreferredSize(new Dimension(250, 0));
+        sidebar.setBackground(Theme.SIDEBAR);
+        sidebar.setBorder(new EmptyBorder(20, 16, 20, 16));
 
         JLabel logo = new JLabel("🦁 ZooVerse");
         logo.setForeground(Theme.TEXT);
-        logo.setFont(new Font("SansSerif", Font.BOLD, 22));
-        sidebar.add(logo);
+        logo.setFont(new Font("SansSerif", Font.BOLD, 28));
 
-        addNavButton(sidebar, "Dashboard");
-        addNavButton(sidebar, "Animals");
-        addNavButton(sidebar, "Operations");
-        addNavButton(sidebar, "Care");
+        JLabel subtitle = new JLabel("Virtual Zoo Command Center");
+        subtitle.setForeground(Theme.MUTED);
+        subtitle.setFont(new Font("SansSerif", Font.PLAIN, 13));
 
-        JButton saveBtn = new JButton("Save Data");
+        JPanel top = new JPanel(new GridLayout(2, 1));
+        top.setOpaque(false);
+        top.add(logo);
+        top.add(subtitle);
+        sidebar.add(top, BorderLayout.NORTH);
+
+        JPanel nav = new JPanel(new GridLayout(6, 1, 8, 8));
+        nav.setOpaque(false);
+        addNavButton(nav, "📊 Dashboard", "Dashboard");
+        addNavButton(nav, "🦓 Animals", "Animals");
+        addNavButton(nav, "🏞️ Operations", "Operations");
+        addNavButton(nav, "🩺 Care & Feeding", "Care");
+        sidebar.add(nav, BorderLayout.CENTER);
+
+        JButton saveBtn = new JButton("💾 Save Zoo Data");
+        Theme.styleButton(saveBtn);
         saveBtn.addActionListener(e -> {
             service.persist();
-            JOptionPane.showMessageDialog(this, "Saved successfully.");
+            JOptionPane.showMessageDialog(this, "ZooVerse data saved successfully.");
             refreshAll();
         });
-        sidebar.add(saveBtn);
+        sidebar.add(saveBtn, BorderLayout.SOUTH);
 
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(sidebar, BorderLayout.WEST);
-        getContentPane().add(content, BorderLayout.CENTER);
-        getContentPane().setBackground(Theme.BG);
+        JPanel root = new JPanel(new BorderLayout());
+        root.setBackground(Theme.BG);
+        root.add(sidebar, BorderLayout.WEST);
+        root.add(content, BorderLayout.CENTER);
+
+        setContentPane(root);
     }
 
-    private void addNavButton(JPanel sidebar, String name) {
-        JButton btn = new JButton(name);
-        btn.setFocusPainted(false);
-        btn.setBackground(Theme.ACCENT);
-        btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("SansSerif", Font.BOLD, 14));
+    private void addNavButton(JPanel sidebar, String label, String route) {
+        JButton btn = new JButton(label);
+        Theme.styleSecondaryButton(btn);
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
         btn.addActionListener(e -> {
-            cardLayout.show(content, name);
+            cardLayout.show(content, route);
             refreshAll();
         });
         sidebar.add(btn);

@@ -27,37 +27,47 @@ public class CarePanel extends JPanel {
     }
 
     private JPanel feedPane() {
-        JPanel p = new JPanel(new BorderLayout(8, 8));
-        p.setBackground(Theme.CARD);
-        p.setBorder(new EmptyBorder(12, 12, 12, 12));
-        JLabel t = new JLabel("Feeding Schedules"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 20));
+        JPanel p = Theme.makeCardLayoutPanel(new BorderLayout(8, 8));
+        JLabel t = new JLabel("🥗 Feeding Schedules"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 22));
         p.add(t, BorderLayout.NORTH);
-        p.add(new JScrollPane(new JTable(feedModel)), BorderLayout.CENTER);
-        JButton add = new JButton("Add Feeding");
+        JTable table = new JTable(feedModel);
+        Theme.styleTable(table);
+        p.add(new JScrollPane(table), BorderLayout.CENTER);
+        JButton add = new JButton("+ Add Feeding");
+        Theme.styleButton(add);
         add.addActionListener(e -> {
-            String aid = JOptionPane.showInputDialog(this, "Animal ID:");
-            String time = JOptionPane.showInputDialog(this, "Time (HH:mm):");
-            String food = JOptionPane.showInputDialog(this, "Food:");
-            service.addFeedingSchedule(aid, time, food);
-            refresh();
+            try {
+                String aid = JOptionPane.showInputDialog(this, "Animal ID:");
+                String time = JOptionPane.showInputDialog(this, "Time (HH:mm):");
+                String food = JOptionPane.showInputDialog(this, "Food:");
+                service.addFeedingSchedule(aid, time, food);
+                refresh();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Could not add feeding entry: " + ex.getMessage());
+            }
         });
         p.add(add, BorderLayout.SOUTH);
         return p;
     }
 
     private JPanel healthPane() {
-        JPanel p = new JPanel(new BorderLayout(8, 8));
-        p.setBackground(Theme.CARD);
-        p.setBorder(new EmptyBorder(12, 12, 12, 12));
-        JLabel t = new JLabel("Health Records"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 20));
+        JPanel p = Theme.makeCardLayoutPanel(new BorderLayout(8, 8));
+        JLabel t = new JLabel("🩺 Health Records"); t.setForeground(Theme.TEXT); t.setFont(new Font("SansSerif", Font.BOLD, 22));
         p.add(t, BorderLayout.NORTH);
-        p.add(new JScrollPane(new JTable(healthModel)), BorderLayout.CENTER);
-        JButton add = new JButton("Add Health Note");
+        JTable table = new JTable(healthModel);
+        Theme.styleTable(table);
+        p.add(new JScrollPane(table), BorderLayout.CENTER);
+        JButton add = new JButton("+ Add Health Note");
+        Theme.styleButton(add);
         add.addActionListener(e -> {
-            String aid = JOptionPane.showInputDialog(this, "Animal ID:");
-            String notes = JOptionPane.showInputDialog(this, "Notes:");
-            service.addHealthRecord(aid, notes);
-            refresh();
+            try {
+                String aid = JOptionPane.showInputDialog(this, "Animal ID:");
+                String notes = JOptionPane.showInputDialog(this, "Notes:");
+                service.addHealthRecord(aid, notes);
+                refresh();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Could not add health note: " + ex.getMessage());
+            }
         });
         p.add(add, BorderLayout.SOUTH);
         return p;

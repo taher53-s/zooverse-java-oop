@@ -23,16 +23,19 @@ public class AnimalsPanel extends JPanel {
 
         JPanel top = new JPanel(new BorderLayout(8, 8));
         top.setOpaque(false);
-        JLabel title = new JLabel("Animals");
+        JLabel title = new JLabel("🦁 Animal Registry");
         title.setForeground(Theme.TEXT);
-        title.setFont(new Font("SansSerif", Font.BOLD, 24));
+        title.setFont(new Font("SansSerif", Font.BOLD, 26));
         top.add(title, BorderLayout.WEST);
 
         JPanel searchWrap = new JPanel(new GridLayout(1, 3, 8, 8));
         searchWrap.setOpaque(false);
+        Theme.styleTextField(searchField);
+        Theme.styleTextField(filterBox);
         searchWrap.add(searchField);
         searchWrap.add(filterBox);
         JButton refreshBtn = new JButton("Search/Refresh");
+        Theme.styleButton(refreshBtn);
         refreshBtn.addActionListener(e -> refreshTable());
         searchWrap.add(refreshBtn);
         top.add(searchWrap, BorderLayout.EAST);
@@ -40,14 +43,19 @@ public class AnimalsPanel extends JPanel {
 
         model = new DefaultTableModel(new String[]{"ID", "Name", "Species", "Age", "Diet", "Health", "Habitat", "Keeper", "Sound"}, 0);
         JTable table = new JTable(model);
+        Theme.styleTable(table);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         JPanel controls = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 8));
         controls.setOpaque(false);
-        JButton add = new JButton("Add Animal");
+        JButton add = new JButton("+ Add Animal");
         JButton delete = new JButton("Delete by ID");
         JButton assign = new JButton("Assign Keeper");
         JButton move = new JButton("Move Habitat");
+        Theme.styleButton(add);
+        Theme.styleSecondaryButton(delete);
+        Theme.styleSecondaryButton(assign);
+        Theme.styleSecondaryButton(move);
         controls.add(add); controls.add(delete); controls.add(assign); controls.add(move);
         add(controls, BorderLayout.SOUTH);
 
@@ -75,20 +83,24 @@ public class AnimalsPanel extends JPanel {
         String type = (String) JOptionPane.showInputDialog(this, "Type:", "Add Animal", JOptionPane.PLAIN_MESSAGE, null, types, types[0]);
         if (type == null) return;
 
-        String id = JOptionPane.showInputDialog(this, "ID (e.g., A10):");
-        String name = JOptionPane.showInputDialog(this, "Name:");
-        int age = Integer.parseInt(JOptionPane.showInputDialog(this, "Age:"));
-        Gender gender = Gender.valueOf(JOptionPane.showInputDialog(this, "Gender MALE/FEMALE:").toUpperCase());
-        DietType diet = DietType.valueOf(JOptionPane.showInputDialog(this, "Diet HERBIVORE/CARNIVORE/OMNIVORE:").toUpperCase());
-        HealthStatus health = HealthStatus.valueOf(JOptionPane.showInputDialog(this, "Health HEALTHY/UNDER_OBSERVATION/SICK/RECOVERING:").toUpperCase());
+        try {
+            String id = JOptionPane.showInputDialog(this, "ID (e.g., A10):");
+            String name = JOptionPane.showInputDialog(this, "Name:");
+            int age = Integer.parseInt(JOptionPane.showInputDialog(this, "Age:"));
+            Gender gender = Gender.valueOf(JOptionPane.showInputDialog(this, "Gender MALE/FEMALE:").toUpperCase());
+            DietType diet = DietType.valueOf(JOptionPane.showInputDialog(this, "Diet HERBIVORE/CARNIVORE/OMNIVORE:").toUpperCase());
+            HealthStatus health = HealthStatus.valueOf(JOptionPane.showInputDialog(this, "Health HEALTHY/UNDER_OBSERVATION/SICK/RECOVERING:").toUpperCase());
 
-        Animal animal = switch (type) {
-            case "Bird" -> new Bird(id, name, age, gender, diet, health);
-            case "Reptile" -> new Reptile(id, name, age, gender, diet, health);
-            default -> new Mammal(id, name, age, gender, diet, health);
-        };
-        service.addAnimal(animal);
-        refreshTable();
+            Animal animal = switch (type) {
+                case "Bird" -> new Bird(id, name, age, gender, diet, health);
+                case "Reptile" -> new Reptile(id, name, age, gender, diet, health);
+                default -> new Mammal(id, name, age, gender, diet, health);
+            };
+            service.addAnimal(animal);
+            refreshTable();
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Could not add animal: " + ex.getMessage());
+        }
     }
 
     public void refreshTable() {
