@@ -91,11 +91,14 @@ public class AnimalsPanel extends JPanel {
             DietType diet = DietType.valueOf(JOptionPane.showInputDialog(this, "Diet HERBIVORE/CARNIVORE/OMNIVORE:").toUpperCase());
             HealthStatus health = HealthStatus.valueOf(JOptionPane.showInputDialog(this, "Health HEALTHY/UNDER_OBSERVATION/SICK/RECOVERING:").toUpperCase());
 
-            Animal animal = switch (type) {
-                case "Bird" -> new Bird(id, name, age, gender, diet, health);
-                case "Reptile" -> new Reptile(id, name, age, gender, diet, health);
-                default -> new Mammal(id, name, age, gender, diet, health);
-            };
+            Animal animal;
+            if ("Bird".equals(type)) {
+                animal = new Bird(id, name, age, gender, diet, health);
+            } else if ("Reptile".equals(type)) {
+                animal = new Reptile(id, name, age, gender, diet, health);
+            } else {
+                animal = new Mammal(id, name, age, gender, diet, health);
+            }
             service.addAnimal(animal);
             refreshTable();
         } catch (Exception ex) {

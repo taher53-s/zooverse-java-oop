@@ -5,6 +5,7 @@ import com.taher.zooverse.ui.panel.AnimalsPanel;
 import com.taher.zooverse.ui.panel.CarePanel;
 import com.taher.zooverse.ui.panel.DashboardPanel;
 import com.taher.zooverse.ui.panel.OperationsPanel;
+import com.taher.zooverse.ui.panel.WelcomePanel;
 import com.taher.zooverse.util.Theme;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ public class MainFrame extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private final JPanel content = new JPanel(cardLayout);
 
+    private final WelcomePanel welcomePanel;
     private final DashboardPanel dashboardPanel;
     private final AnimalsPanel animalsPanel;
     private final OperationsPanel operationsPanel;
@@ -26,11 +28,13 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
+        welcomePanel = new WelcomePanel();
         dashboardPanel = new DashboardPanel(service);
         animalsPanel = new AnimalsPanel(service);
         operationsPanel = new OperationsPanel(service);
         carePanel = new CarePanel(service);
 
+        content.add(welcomePanel, "Welcome");
         content.add(dashboardPanel, "Dashboard");
         content.add(animalsPanel, "Animals");
         content.add(operationsPanel, "Operations");
@@ -56,8 +60,9 @@ public class MainFrame extends JFrame {
         top.add(subtitle);
         sidebar.add(top, BorderLayout.NORTH);
 
-        JPanel nav = new JPanel(new GridLayout(6, 1, 8, 8));
+        JPanel nav = new JPanel(new GridLayout(7, 1, 8, 8));
         nav.setOpaque(false);
+        addNavButton(nav, "✨ Welcome", "Welcome");
         addNavButton(nav, "📊 Dashboard", "Dashboard");
         addNavButton(nav, "🦓 Animals", "Animals");
         addNavButton(nav, "🏞️ Operations", "Operations");
